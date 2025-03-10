@@ -6,11 +6,11 @@ This project has two parts. One being the server consiting of rust and spacetime
 
 ### Prerequisites
 Make sure to install the spacetime cli and bun or any other node package manager
-- [Spacetime db client](https://spacetimedb.com/install)
+- [Spacetime cli](https://spacetimedb.com/install)
 - [Bun](https://bun.sh/)
 
 ### Server
-Start the server
+The first step is to start a standalone server 
 ```bash
 cd server
 spacetime start
