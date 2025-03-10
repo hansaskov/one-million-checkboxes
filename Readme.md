@@ -21,10 +21,6 @@ Create a new terminal and publish the model
 spacetime publish --project-path server one-million-checkboxes
 ```
 
-Seed the database with 10.000 checkboxes. Not quite 1 million. yet😢
-```bash
-spacetime call one-million-checkboxes initialize_db "hansaskov"
-```
 That is it for setting up the server. Now let's go to the client frontend
 
 ### Client

@@ -13,7 +13,6 @@ pub struct User {
 pub struct Checkbox {
     #[primary_key]
     id: u32,
-    checked: bool,
 }
 
 
@@ -27,13 +26,7 @@ fn validate_name(name: String) -> Result<String, String> {
 }
 
 /// Takes a message's text and checks if it's acceptable to send.
-fn validate_id(id: u32) -> Result<u32, String> {
-    if id > 1_000_000 {
-        Err("Messages must not be empty".to_string())
-    } else {
-        Ok(id)
-    }
-}
+
 
 #[reducer]
 /// Clients invoke this reducer to set their user names.
@@ -47,49 +40,30 @@ pub fn set_name(ctx: &ReducerContext, name: String) -> Result<(), String> {
     }
 }
 
+fn validate_id(id: u32) -> Result<u32, String> {
+    if id > 1_000_000 {
+        Err("Messages must not be empty".to_string())
+    } else {
+        Ok(id)
+    }
+}
+
 #[reducer]
 /// Clients invoke this reducer to toggle checkboxes.
 pub fn toggle(ctx: &ReducerContext, id: u32) -> Result<(), String> {
+    log::info!("Before updating {}", id);
     let id = validate_id(id)?;
+    log::info!("Updating {}", id);
     if let Some(checkbox) = ctx.db.checkbox().id().find(id) {
-        ctx.db.checkbox().id().update({Checkbox {
-            checked: !checkbox.checked,
-            ..checkbox
-        }});
-        Ok(())
+        ctx.db.checkbox().id().delete(checkbox.id);
     } else {
-        Err("Cannot toggle chekbox".to_string())
-    }
-}
-
-/// Takes a name and checks if it's acceptable as a user's name.
-fn validate_password(name: String) -> Result<(), String> {
-    if name == "hansaskov".to_string() {
-        Ok(())
-    } else {
-        Err("Names must not be empty".to_string())
-    }
-}
-#[reducer]
-/// Clients invoke this reducer to toggle checkboxes.
-pub fn initialize_db(ctx: &ReducerContext, password: String) -> Result<(), String> {
-    validate_password(password)?;
-   
-    for id in 0..10_000 {
-        
-        if let Some(Checkbox) = ctx.db.checkbox().id().find(id) {
-
-        } else {
-            ctx.db.checkbox().insert({Checkbox {
-                checked: false,
-                id
-            }});
-        }
+        ctx.db.checkbox().insert(Checkbox {
+            id
+        });
     }
 
     Ok(())
 }
-
 
 #[reducer(client_connected)]
 // Called when a client connects to the SpacetimeDB

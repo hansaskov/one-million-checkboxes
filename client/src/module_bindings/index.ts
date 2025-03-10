@@ -36,8 +36,6 @@ import { ClientConnected } from "./client_connected_reducer.ts";
 export { ClientConnected };
 import { IdentityDisconnected } from "./identity_disconnected_reducer.ts";
 export { IdentityDisconnected };
-import { InitializeDb } from "./initialize_db_reducer.ts";
-export { InitializeDb };
 import { SetName } from "./set_name_reducer.ts";
 export { SetName };
 import { Toggle } from "./toggle_reducer.ts";
@@ -77,10 +75,6 @@ const REMOTE_MODULE = {
       reducerName: "identity_disconnected",
       argsType: IdentityDisconnected.getTypeScriptAlgebraicType(),
     },
-    initialize_db: {
-      reducerName: "initialize_db",
-      argsType: InitializeDb.getTypeScriptAlgebraicType(),
-    },
     set_name: {
       reducerName: "set_name",
       argsType: SetName.getTypeScriptAlgebraicType(),
@@ -118,7 +112,6 @@ const REMOTE_MODULE = {
 export type Reducer = never
 | { name: "ClientConnected", args: ClientConnected }
 | { name: "IdentityDisconnected", args: IdentityDisconnected }
-| { name: "InitializeDb", args: InitializeDb }
 | { name: "SetName", args: SetName }
 | { name: "Toggle", args: Toggle }
 ;
@@ -140,22 +133,6 @@ export class RemoteReducers {
 
   removeOnIdentityDisconnected(callback: (ctx: ReducerEventContext) => void) {
     this.connection.offReducer("identity_disconnected", callback);
-  }
-
-  initializeDb(password: string) {
-    const __args = { password };
-    let __writer = new BinaryWriter(1024);
-    InitializeDb.getTypeScriptAlgebraicType().serialize(__writer, __args);
-    let __argsBuffer = __writer.getBuffer();
-    this.connection.callReducer("initialize_db", __argsBuffer, this.setCallReducerFlags.initializeDbFlags);
-  }
-
-  onInitializeDb(callback: (ctx: ReducerEventContext, password: string) => void) {
-    this.connection.onReducer("initialize_db", callback);
-  }
-
-  removeOnInitializeDb(callback: (ctx: ReducerEventContext, password: string) => void) {
-    this.connection.offReducer("initialize_db", callback);
   }
 
   setName(name: string) {
@@ -193,11 +170,6 @@ export class RemoteReducers {
 }
 
 export class SetReducerFlags {
-  initializeDbFlags: CallReducerFlags = 'FullUpdate';
-  initializeDb(flags: CallReducerFlags) {
-    this.initializeDbFlags = flags;
-  }
-
   setNameFlags: CallReducerFlags = 'FullUpdate';
   setName(flags: CallReducerFlags) {
     this.setNameFlags = flags;

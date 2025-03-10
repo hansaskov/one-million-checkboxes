@@ -32,7 +32,6 @@ import {
 } from "@clockworklabs/spacetimedb-sdk";
 export type Checkbox = {
   id: number,
-  checked: boolean,
 };
 
 /**
@@ -46,7 +45,6 @@ export namespace Checkbox {
   export function getTypeScriptAlgebraicType(): AlgebraicType {
     return AlgebraicType.createProductType([
       new ProductTypeElement("id", AlgebraicType.createU32Type()),
-      new ProductTypeElement("checked", AlgebraicType.createBoolType()),
     ]);
   }
 

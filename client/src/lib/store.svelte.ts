@@ -46,25 +46,17 @@ class Store {
         })
         .build();
 
-
-
         this.connection.db.checkbox.onInsert((ctx, checkbox) => {
-            this.checkboxes.push(checkbox)
+            this.checkboxes[checkbox.id] = true
         })
     
         this.connection.db.checkbox.onUpdate((ctx, oldRow, newRow) => {
-            const index = this.checkboxes.findIndex((item) => item.id === oldRow.id);
-            if (index === -1) return
-
-            this.checkboxes[index] = { ...oldRow, ...newRow }
-            
+            this.checkboxes[oldRow.id] = false
+            this.checkboxes[newRow.id] = true
         })
     
         this.connection.db.checkbox.onDelete((ctx, checkbox) => {
-            const index = this.checkboxes.findIndex((item) => item.id === checkbox.id);
-            if (index === -1) return
-
-            this.users.splice(index, 1)  
+            this.checkboxes[checkbox.id] = false
         })
         
         this.connection.db.user.onInsert((ctx, user) => {
@@ -95,7 +87,7 @@ class Store {
     identity = $state<Identity>()
     connection = $state<DbConnection>()
     users = $state<User[]>([]);
-    checkboxes = $state<Checkbox[]>([]);
+    checkboxes = $state(new Array<boolean>(100_000))
 
 }
 
