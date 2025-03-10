@@ -12,7 +12,7 @@ class Store {
     startConnection() {
         this.connection = DbConnection.builder()
         .withUri("ws://localhost:3000")
-        .withModuleName("quickstart-chat")
+        .withModuleName("one-million-checkboxes")
         .withToken(localStorage.getItem(AUTH_TOKEN_KEY) || "")
         .onConnect((conn, identity, token) => {
             this.identity = identity;
